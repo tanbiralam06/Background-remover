@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xplore</title>
+    <!-- Include your CSS file here -->
+    <link rel="stylesheet" href="remove background.css">
+</head>
+
+<body>
+    <header id="mainNavbar" class="sticky-navbar">
+        <h2 class="logo">
+            <img src="logo.png" alt="Logo">
+        </h2>
+        <nav class="navigation">
+            <a href="/index.html">Home</a>
+            <a href="#">About</a>
+            <a href="/remove background.html">Remove Background</a>
+            <a href="#">Blogs</a>
+            <a href="#">Contact</a>
+            <button class="btnlogin-popup">Login</button>
+        </nav>
+    </header>
+
+    <div class="content">
+        <h2>Effortlessly Remove Image Backgrounds</h2>
+        <p>1. Upload any image file format.</p>
+        <p>2. Our AI-powered tool removes backgrounds instantly.</p>
+        <p>3. Preview the transparent image result.</p>
+        <p>4. Download the high-quality transparent image.</p>
+        <p>5. Enhance your photos for professional use.</p>
+        <p>6. Perfect for product photography and graphic design.</p>
+        <p>7. Easy-to-use interface for quick background removal.</p>
+        <p>8. Save time and effort with automated background removal.</p>
+        <p>9. No software installation required, works online.</p>
+        <p>10. Get started now and create stunning images!</p>
+    </div>
+
+    <!-- Container that will be shown/hidden -->
+    <div class="container" style="display: none;">
+        <!-- Container contents as per your previous code -->
+    </div>
+    <div class="container ">
+        <div class="row mt-4">
+            <div class="col-md-12 card mt-4">
+                <form>
+                    <div class="form-group">
+                        <label for="fileInput">Select a File: </label>
+                        <input id="fileInput" class="form-control" type="file">
+                    </div>
+                    <button class="btn btn-primary m-1" type="button" onclick="submitHandler()">Upload</button>
+                </form>
+
+                <button class="btn btn-warning" onclick="downloadFile()">
+                    Download
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- Container for the background removal result -->
+    <div id="resultContainer" class="result-container"></div>
+
+
+
+    <!-- Include your JavaScript file here -->
+    <script>
+        let imageURL;
+
+        function submitHandler() {
+            console.log("click");
+            const fileInput = document.getElementById('fileInput');
+            console.log(fileInput.files);
+            const image = fileInput.files[0];
+
+            // Multipart file
+            const formData = new FormData();
+            formData.append('image_file', image);
+            formData.append('size', 'auto');
+
+            const apiKey = "dzfch8MHdP78Gc5EefijbMKe";
+
+            fetch('https://api.remove.bg/v1.0/removebg', {
+                method: 'POST',
+                headers: {
+                    'X-Api-Key': apiKey
+                },
+                body: formData
+            })
+                .then(function (reponse) {
+                    return reponse.blob()
+                })
+                .then(function (blob) {
+                    console.log(blob);
+                    const url = URL.createObjectURL(blob);
+                    imageURL = url;
+                    const img = document.createElement('img');
+                    img.src = url;
+                    document.body.appendChild(img);
+                })
+                .catch();
+            // Update the result container background with the image
+            const resultContainer = document.getElementById('resultContainer');
+            resultContainer.style.backgroundImage = `url(${url})`;
+            resultContainer.style.backgroundSize = 'cover';
+            resultContainer.style.backgroundRepeat = 'no-repeat';
+            resultContainer.style.backgroundPosition = 'center';
+            resultContainer.style.display = 'block'; // Show the result container
+            
+        }
+        
+
+        function downloadFile() {
+            var a = document.createElement('a'); //<a></a>
+            a.href = imageURL;
+            a.download = 'No-bg-Xplore.png';
+            document.body.appendChild(a);
+
+            a.click();
+
+            document.body.removeChild(a);
+        }
+
+
+    </script>
+    <script src="script.js"></script>
+</body>
+
+</html>
